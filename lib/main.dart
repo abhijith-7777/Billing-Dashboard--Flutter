@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'menubar.dart';
-import './graph.dart';
-import './total_payment_invoice.dart';
-import './invoice_data.dart';
-import './bottomnav.dart';
-import './floatbutton.dart';
-import './appbar.dart';
+import 'widget/menubar.dart';
+import 'widget/graph.dart';
+import 'widget/total_payment_invoice.dart';
+import 'widget/invoice_data.dart';
+import './widget/bottomnav.dart';
+import './widget/floatbutton.dart';
+import './widget/appbar.dart';
 
 void main() => runApp(InvoiceApp());
 
@@ -44,22 +44,15 @@ class _InvoiceDashboardState extends State<InvoiceDashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
-
       body: Column(
         children: [
-          Bar(controller: _tabController), 
-          Expanded(
-            child: ListView(
-              children: [
-                SizedBox(height: 16),
-                CustomGauge(),
-                Invoice(),  
-              ],
-            ),
-          ),
+          CustomAppBar(),
+          Bar(controller: _tabController),
+         
+          CustomGauge(),
+          Invoice(),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.symmetric(vertical:3),
             width: double.infinity,
             height: 0.4,
             decoration: BoxDecoration(
@@ -78,7 +71,7 @@ class _InvoiceDashboardState extends State<InvoiceDashboard>
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 1),
+              padding: const EdgeInsets.symmetric(vertical: 5),
               child: ListView.builder(
                 itemCount: invoices.length,
                 itemBuilder: (context, index) =>
@@ -90,9 +83,7 @@ class _InvoiceDashboardState extends State<InvoiceDashboard>
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(
-          bottom:
-              MediaQuery.of(context).size.height *
-              0.015, 
+          bottom: MediaQuery.of(context).size.height * 0.015,
         ),
         child: const CustomFloatingActionButton(),
       ),
