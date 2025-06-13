@@ -37,7 +37,7 @@ class CustomGauge extends StatelessWidget {
       child: Column(
         children: [
           Center(
-            child: Container(
+            child: SizedBox(
               width: 300,
               height: 100,
               child: Stack(

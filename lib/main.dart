@@ -24,71 +24,58 @@ class InvoiceApp extends StatelessWidget {
   }
 }
 
-class InvoiceDashboard extends StatefulWidget {
+class InvoiceDashboard extends StatelessWidget {
   const InvoiceDashboard({super.key});
 
   @override
-  _InvoiceDashboardState createState() => _InvoiceDashboardState();
-}
-
-class _InvoiceDashboardState extends State<InvoiceDashboard>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          CustomAppBar(),
-          Bar(controller: _tabController),
-         
-          CustomGauge(),
-          Invoice(),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical:3),
-            width: double.infinity,
-            height: 0.4,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0x80767174), // 50% opacity
-                  Color(0x80DCD2D8), // 50% opacity
-                  Color(0x80767174), // 50% opacity
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
-          ),
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        body: Column(
+          children: [
+            const CustomAppBar(),
+            const Bar(),
+            const CustomGauge(),
+            const Invoice(),
 
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: ListView.builder(
-                itemCount: invoices.length,
-                itemBuilder: (context, index) =>
-                    buildInvoiceCard(context, invoices[index]),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 3),
+              width: double.infinity,
+              height: 0.4,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0x80767174),
+                    Color(0x80DCD2D8),
+                    Color(0x80767174),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0.0, 0.5, 1.0],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height * 0.015,
+
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: ListView.builder(
+                  itemCount: invoices.length,
+                  itemBuilder: (context, index) =>
+                      buildInvoiceCard(context, invoices[index]),
+                ),
+              ),
+            ),
+          ],
         ),
-        child: const CustomFloatingActionButton(),
+        floatingActionButton: const Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: CustomFloatingActionButton(),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: CustomBottomNavigationBar(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

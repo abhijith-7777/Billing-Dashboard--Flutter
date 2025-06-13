@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
 class Bar extends StatelessWidget {
-  final TabController controller;
-
-  const Bar({super.key, required this.controller});
+  const Bar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TabController? controller = DefaultTabController.of(context);
+
     return Container(
       color: const Color(0xFF1F0D19),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          buildTab('All Invoices', isSelected: controller.index == 0),
-          buildTab('Paid', isSelected: controller.index == 1),
-          buildTab('Unpaid', isSelected: controller.index == 2),
-          buildTab('Drafts', isSelected: controller.index == 3),
+          buildTab('All Invoices', isSelected: controller?.index == 0, context: context),
+          buildTab('Paid', isSelected: controller?.index == 1, context: context),
+          buildTab('Unpaid', isSelected: controller?.index == 2, context: context),
+          buildTab('Drafts', isSelected: controller?.index == 3, context: context),
           buildIconTab(),
         ],
       ),
     );
   }
 
-  Widget buildTab(String title, {required bool isSelected}) {
+  Widget buildTab(String title, {required bool isSelected, required BuildContext context}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       child: OutlinedButton(
@@ -38,7 +38,7 @@ class Bar extends StatelessWidget {
           minimumSize: const Size(0, 0),
         ),
         onPressed: () {
-          controller.animateTo(_getTabIndex(title));
+          DefaultTabController.of(context).animateTo(_getTabIndex(title));
         },
         child: Text(
           title,
@@ -83,4 +83,5 @@ class Bar extends StatelessWidget {
     }
   }
 }
+
 
