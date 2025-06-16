@@ -13,7 +13,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: Image.asset(asset, height: 24, width: 24),
+              child: Image.asset(asset, height: 22, width: 22),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 4),

@@ -28,6 +28,15 @@ final List<Map<String, dynamic>> invoices = [
     'color': Colors.green,
     'icon': Icons.check_circle,
   },
+  {
+    'name': 'Jesbin Binu',
+    'id': 'INVCC-000003',
+    'date': '02/05/2025',
+    'status': 'PAID',
+    'amount': '₹19000.00',
+    'color': Colors.green,
+    'icon': Icons.check_circle,
+  },
 ];
 
 Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
@@ -54,7 +63,7 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: const EdgeInsets.only(bottom: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -129,7 +138,7 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
                       ),
                       Flexible(
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 4),
+                          padding: const EdgeInsets.only(right: 0),
                           child: Text(
                             "Mark as paid by client",
                             style: const TextStyle(

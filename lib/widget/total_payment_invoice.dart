@@ -6,13 +6,13 @@ class Invoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6), // Adjusted for responsiveness
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             child: Padding(
-              padding: const EdgeInsets.only(right: 8), // Slightly reduced
+              padding: const EdgeInsets.only(right: 8, top: 20, bottom: 20),
               child: RichText(
                 text: const TextSpan(
                   children: [
@@ -45,7 +45,7 @@ class Invoice extends StatelessWidget {
               side: const BorderSide(color: Color(0xFFA9A9A9)),
               shape: const StadiumBorder(),
               backgroundColor: const Color(0xFFA9A9A9).withOpacity(0.15),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

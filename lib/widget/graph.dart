@@ -33,7 +33,7 @@ class CustomGauge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
         children: [
           Center(
@@ -71,7 +71,7 @@ class CustomGauge extends StatelessWidget {
             ),
           ),
 
-          const Padding(padding: EdgeInsets.only(top: 40)),
+          const Padding(padding: EdgeInsets.only(top: 50)),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -123,8 +123,7 @@ class GaugePainter extends CustomPainter {
         ..color = colors[i]
         ..strokeWidth = strokeWidth
         ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round; 
-
+        ..strokeCap = StrokeCap.round;
 
       final roundedClip = RRect.fromRectAndRadius(
         rect.inflate(strokeWidth / 2),
@@ -143,4 +142,3 @@ class GaugePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
-

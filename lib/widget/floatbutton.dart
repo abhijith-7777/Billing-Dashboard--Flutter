@@ -6,8 +6,9 @@ class CustomFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 12.0, bottom: 0.0), 
+      padding: const EdgeInsets.only(right: 0.0, bottom: 0.0),
       child: Container(
+        height: 50, // Added height to adjust floatbutton height
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
@@ -32,7 +33,7 @@ class CustomFloatingActionButton extends StatelessWidget {
             ),
           ),
           icon: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 0.0),
             child: Image.asset(
               'assets/image/floatbutton.png',
               height: 20,
@@ -48,5 +49,3 @@ class CustomFloatingActionButton extends StatelessWidget {
     );
   }
 }
-
-
