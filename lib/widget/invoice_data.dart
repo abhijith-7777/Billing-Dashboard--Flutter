@@ -22,7 +22,7 @@ final List<Map<String, dynamic>> invoices = [
   {
     'name': 'Rahul V Nair',
     'id': 'INVCC-000001',
-    'date': '02/05/2025',
+    'date': '03/05/2025',
     'status': 'PAID',
     'amount': '₹2000.00',
     'color': Colors.green,
@@ -37,6 +37,7 @@ final List<Map<String, dynamic>> invoices = [
     'color': Colors.green,
     'icon': Icons.check_circle,
   },
+  
 ];
 
 Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {

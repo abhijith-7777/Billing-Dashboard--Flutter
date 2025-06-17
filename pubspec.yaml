@@ -67,6 +67,9 @@ flutter:
     - assets/image/settings.png
     - assets/image/exit.png
     - assets/image/floatbutton.png
+    - assets/image/sort.png
+    - assets/image/AtoZ.png
+    - assets/image/ZtoA.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

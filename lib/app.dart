@@ -7,7 +7,6 @@ import './widget/bottomnav.dart';
 import './widget/floatbutton.dart';
 import './widget/appbar.dart';
 
-
 class InvoiceApp extends StatelessWidget {
   const InvoiceApp({super.key});
 
@@ -23,8 +22,15 @@ class InvoiceApp extends StatelessWidget {
   }
 }
 
-class InvoiceDashboard extends StatelessWidget {
+class InvoiceDashboard extends StatefulWidget {
   const InvoiceDashboard({super.key});
+
+  @override
+  State<InvoiceDashboard> createState() => _InvoiceDashboardState();
+}
+
+class _InvoiceDashboardState extends State<InvoiceDashboard> {
+  int selectedSortIndex = 0;
 
   List<Map<String, dynamic>> getFilteredInvoices(
     List<Map<String, dynamic>> invoices,
@@ -42,6 +48,41 @@ class InvoiceDashboard extends StatelessWidget {
     }
   }
 
+  List<Map<String, dynamic>> sortInvoices(
+    List<Map<String, dynamic>> data,
+    int sortIndex,
+  ) {
+    List<Map<String, dynamic>> sorted = [...data];
+    DateTime parseDate(String dateStr) {
+      final parts = dateStr.split('/');
+      return DateTime(
+        int.parse(parts[2]),
+        int.parse(parts[1]),
+        int.parse(parts[0]),
+      );
+    }
+
+    switch (sortIndex) {
+      case 0:
+        sorted.sort(
+          (a, b) => parseDate(b['date']).compareTo(parseDate(a['date'])),
+        );
+        break;
+      case 1:
+        sorted.sort(
+          (a, b) => parseDate(a['date']).compareTo(parseDate(b['date'])),
+        );
+        break;
+      case 2:
+        sorted.sort((a, b) => a['name'].compareTo(b['name']));
+        break;
+      case 3:
+        sorted.sort((a, b) => b['name'].compareTo(a['name']));
+        break;
+    }
+    return sorted;
+  }
+
   @override
   Widget build(BuildContext context) {
     final allInvoices = invoices;
@@ -52,23 +93,28 @@ class InvoiceDashboard extends StatelessWidget {
         builder: (context) {
           final controller = DefaultTabController.of(context);
           final currentIndex = controller.index;
-          final filteredInvoices = getFilteredInvoices(
-            allInvoices,
-            currentIndex,
-          );
+
+          final filtered = getFilteredInvoices(allInvoices, currentIndex);
+          final sorted = sortInvoices(filtered, selectedSortIndex);
 
           controller.addListener(() {
-            (context as Element).markNeedsBuild();
+            setState(() {});
           });
 
           return Scaffold(
-            appBar: CustomAppBar(),
-
+            appBar: CustomAppBar(
+              onSortSelected: (index) {
+                setState(() {
+                  selectedSortIndex = index;
+                });
+              },
+              selectedSortIndex: selectedSortIndex,
+            ),
             body: Column(
               children: [
                 Bar(controller: controller),
                 if (currentIndex == 0) const CustomGauge(),
-                const Invoice(),
+                Invoice(currentIndex: currentIndex, count: filtered.length),
                 Container(
                   width: double.infinity,
                   height: 0.5,
@@ -85,14 +131,14 @@ class InvoiceDashboard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(padding: const EdgeInsets.all(15)),
+                const Padding(padding: EdgeInsets.all(15)),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0),
                     child: ListView.builder(
-                      itemCount: filteredInvoices.length,
+                      itemCount: sorted.length,
                       itemBuilder: (context, index) =>
-                          buildInvoiceCard(context, filteredInvoices[index]),
+                          buildInvoiceCard(context, sorted[index]),
                     ),
                   ),
                 ),

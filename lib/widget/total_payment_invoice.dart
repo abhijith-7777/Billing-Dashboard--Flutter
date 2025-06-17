@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
 
 class Invoice extends StatelessWidget {
-  const Invoice({super.key});
+  final int currentIndex;
+  final int count;
+
+  const Invoice({super.key, required this.currentIndex, required this.count});
 
   @override
   Widget build(BuildContext context) {
+    String title = "Total Invoices: ";
+    if (currentIndex == 1) {
+      title = "Total Paid Invoices: ";
+    }
+    else  if (currentIndex == 2) {
+      title = "Total Unpaid Invoices: ";
+    }
+    else  if (currentIndex == 3) {
+      title = "Total Drafts Invoices: ";
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
       child: Row(
@@ -14,19 +28,19 @@ class Invoice extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8, top: 20, bottom: 20),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Total Invoices: ",
-                      style: TextStyle(
+                      text: title,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     TextSpan(
-                      text: "04",
-                      style: TextStyle(
+                      text: count.toString(),
+                      style: const TextStyle(
                         color: Color(0XFFD67252),
                         fontWeight: FontWeight.w700,
                         fontSize: 12,

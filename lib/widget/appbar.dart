@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import './bottomsheet.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final void Function(int)? onSortSelected;
+  final int selectedSortIndex;
+
+  const CustomAppBar({
+    super.key,
+    this.onSortSelected,
+    this.selectedSortIndex = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +28,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: IconButton(
-            onPressed: () {},
-            icon: Image.asset('assets/image/logo.png', height: 24, width: 24),
-          ),
+        IconButton(
+          onPressed: () {},
+          icon: Image.asset('assets/image/logo.png', height: 24, width: 24),
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: IconButton(
-            onPressed: () {},
-            icon: Image.asset('assets/image/arrow.png', height: 24, width: 24),
-          ),
+        IconButton(
+          onPressed: () {
+            _showSortBottomSheet(context);
+          },
+          icon: Image.asset('assets/image/arrow.png', height: 24, width: 24),
         ),
       ],
+    );
+  }
+
+  void _showSortBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => AnimatedSortBottomSheet(
+        selectedIndex: selectedSortIndex,
+        onSelect: (index) {
+          Navigator.pop(context);
+          if (onSortSelected != null) {
+            onSortSelected!(index);
+          }
+        },
+      ),
     );
   }
 
