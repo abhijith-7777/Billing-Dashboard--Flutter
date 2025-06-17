@@ -37,12 +37,12 @@ final List<Map<String, dynamic>> invoices = [
     'color': Colors.green,
     'icon': Icons.check_circle,
   },
-  
 ];
 
 Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
+  final ValueNotifier<bool> isCheckedNotifier = ValueNotifier(false);
+
   return Container(
-    // Outer Container for the gradient border
     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8),
@@ -52,17 +52,16 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
         end: Alignment.bottomRight,
       ),
     ),
-
     child: Card(
       color: const Color.fromARGB(31, 0, 0, 0),
-
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      margin: EdgeInsets.all(1.0),
+      margin: const EdgeInsets.all(1.0),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Top row with name and more icon
             Padding(
               padding: const EdgeInsets.only(bottom: 0),
               child: Row(
@@ -89,7 +88,7 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
               ),
             ),
 
-            // ID, Date, Status Row
+            // ID, Date, Status row
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Row(
@@ -121,21 +120,34 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
               ),
             ),
 
-            // Checkbox and Amount
+            // Checkbox and Amount row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Row(
                     children: [
-                      Checkbox(
-                        value: false,
-                        onChanged: (_) {},
-                        visualDensity: VisualDensity.compact,
-                        side: const BorderSide(
-                          color: Color(0xFFD67252),
-                          width: 2,
-                        ),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: isCheckedNotifier,
+                        builder: (context, isChecked, _) {
+                          return Checkbox(
+                            value: isChecked,
+                            onChanged: (bool? newValue) {
+                              isCheckedNotifier.value = newValue ?? false;
+                            },
+                            visualDensity: VisualDensity.compact,
+                            side: const BorderSide(
+                              color: Color(
+                                0xFFD67252,
+                              ), // Border color when NOT selected
+                              width: 2,
+                            ),
+                            activeColor: Color(
+                              0xFFD67252,
+                            ), // Fill color when selected
+                            checkColor: Colors.white, // Check icon color
+                          );
+                        },
                       ),
                       Flexible(
                         child: Padding(
