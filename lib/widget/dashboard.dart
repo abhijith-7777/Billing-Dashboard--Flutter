@@ -72,11 +72,11 @@ class InvoiceDashboard extends StatelessWidget {
                       child: sorted.isNotEmpty
                           ? ListView.builder(
                               itemCount: sorted.length,
-                              itemBuilder: (context, index) =>
-                                  buildInvoiceCard(context, sorted[index], () {
-                                    selectedSortIndex.value =
-                                        selectedSortIndex.value;
-                                  }),
+                              itemBuilder: (context, index) => buildInvoiceCard(
+                                context,
+                                sorted[index],
+                                () => selectedSortIndex.notifyListeners(),
+                              ),
                             )
                           : Center(
                               child: Padding(
