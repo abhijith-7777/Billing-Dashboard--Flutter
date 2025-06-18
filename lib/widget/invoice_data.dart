@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './bottomchoosesheet.dart';
 
-
+// Global invoice list
 final List<Map<String, dynamic>> invoices = [
   {
     'name': 'Rahul V Nair',
@@ -39,10 +39,9 @@ final List<Map<String, dynamic>> invoices = [
     'color': Colors.green,
     'icon': Icons.check_circle,
   },
-  
 ];
 
-// Global selected invoice IDs set
+// Track selected invoices
 final Set<String> selectedInvoiceIds = {};
 
 Widget buildInvoiceCard(
@@ -73,7 +72,7 @@ Widget buildInvoiceCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          
+            // Top Row: Name and Options
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -98,8 +97,13 @@ Widget buildInvoiceCard(
                       builder: (_) => CustomSortBottomSheet(
                         selectedIndex: 0,
                         onSelect: (int index) {
-                          
-                          print("Selected sort index: $index");
+                          if (index == 3) {
+                            // Remove selected invoice
+                            invoices.removeWhere((element) =>
+                                element['id'] == invoice['id']);
+                            selectedInvoiceIds.remove(invoice['id']);
+                            onUpdate();
+                          }
                           Navigator.pop(context);
                         },
                       ),
@@ -140,7 +144,7 @@ Widget buildInvoiceCard(
               ],
             ),
 
-            // Checkbox and Amount row
+            // Checkbox and Amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -166,14 +170,10 @@ Widget buildInvoiceCard(
                             },
                             visualDensity: VisualDensity.compact,
                             side: const BorderSide(
-                              color: Color(
-                                0xFFD67252,
-                              ), // Border color when NOT selected
+                              color: Color(0xFFD67252),
                               width: 2,
                             ),
-                            activeColor: Color(
-                              0xFFD67252,
-                            ), // Fill color when selected
+                            activeColor: Color(0xFFD67252),
                             checkColor: Colors.white,
                           );
                         },

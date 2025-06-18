@@ -66,7 +66,6 @@ class CustomSortBottomSheet extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                 
                     onTap: () {
                       if (onSelect != null) onSelect!(index);
                     },
@@ -85,3 +84,4 @@ class CustomSortBottomSheet extends StatelessWidget {
     );
   }
 }
+
