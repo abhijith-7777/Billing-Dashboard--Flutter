@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -91,18 +90,9 @@ class CustomGauge extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildStatusLegend(
-                const Color(0xFFC27605),
-                "Drafts (${draftCount.toString().padLeft(2, '0')})",
-              ),
-              _buildStatusLegend(
-                const Color(0xFF4B7C47),
-                "Paid (${paidCount.toString().padLeft(2, '0')})",
-              ),
-              _buildStatusLegend(
-                const Color(0xFFFF373B),
-                "Unpaid (${unpaidCount.toString().padLeft(2, '0')})",
-              ),
+              _buildStatusLegend(const Color(0xFFC27605), "Drafts ($draftCount)"),
+              _buildStatusLegend(const Color(0xFF4B7C47), "Paid ($paidCount)"),
+              _buildStatusLegend(const Color(0xFFFF373B), "Unpaid ($unpaidCount)"),
             ],
           ),
         ],
@@ -180,3 +170,4 @@ class GaugePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+

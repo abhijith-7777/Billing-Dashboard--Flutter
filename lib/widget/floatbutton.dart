@@ -8,7 +8,7 @@ class CustomFloatingActionButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 0.0, bottom: 0.0),
       child: Container(
-        height: 50, // Added height to adjust floatbutton height
+        height: 50, 
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
