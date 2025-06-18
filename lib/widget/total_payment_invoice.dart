@@ -18,6 +18,9 @@ class Invoice extends StatelessWidget {
     else  if (currentIndex == 3) {
       title = "Total Drafts Invoices: ";
     }
+     else  if (currentIndex == 4) {
+      title = "Total Filtered Invoices: ";
+    }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
@@ -39,7 +42,7 @@ class Invoice extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: count.toString(),
+                      text: count.toString().padLeft(2, '0'),
                       style: const TextStyle(
                         color: Color(0XFFD67252),
                         fontWeight: FontWeight.w700,

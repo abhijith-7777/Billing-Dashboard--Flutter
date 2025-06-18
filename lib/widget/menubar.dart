@@ -16,7 +16,7 @@ class Bar extends StatelessWidget {
           buildTab('Paid', isSelected: controller.index == 1),
           buildTab('Unpaid', isSelected: controller.index == 2),
           buildTab('Drafts', isSelected: controller.index == 3),
-          buildIconTab(),
+          buildIconTab('Filered', isSelected: controller.index == 4),
         ],
       ),
     );
@@ -52,11 +52,14 @@ class Bar extends StatelessWidget {
     );
   }
 
-  Widget buildIconTab() {
+  Widget buildIconTab(String title, {required bool isSelected}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
+          style: OutlinedButton.styleFrom(
+          backgroundColor: isSelected
+              ? const Color(0xFF6E5773)
+              : Colors.transparent,
           side: const BorderSide(color: Color(0xFFB189BA)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -64,8 +67,10 @@ class Bar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           minimumSize: const Size(0, 0),
         ),
-        onPressed: () {},
-        child: Image.asset('assets/image/Group.png', height: 18, width: 18),
+        onPressed: () {
+          controller.animateTo(4);
+        },
+        child: Image.asset('assets/image/Group.png', height: 18, width: 18, color: isSelected ? Colors.white : null,),
       ),
     );
   }

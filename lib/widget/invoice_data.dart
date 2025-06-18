@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './bottomchoosesheet.dart';
+
 
 final List<Map<String, dynamic>> invoices = [
   {
@@ -12,7 +14,7 @@ final List<Map<String, dynamic>> invoices = [
   },
   {
     'name': 'Ajith Simon',
-    'id': 'INVCC-000002',
+    'id': 'INVCC-000004',
     'date': '02/05/2025',
     'status': 'DRAFT',
     'amount': '₹2000.00',
@@ -37,10 +39,20 @@ final List<Map<String, dynamic>> invoices = [
     'color': Colors.green,
     'icon': Icons.check_circle,
   },
+  
 ];
 
-Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
-  final ValueNotifier<bool> isCheckedNotifier = ValueNotifier(false);
+// Global selected invoice IDs set
+final Set<String> selectedInvoiceIds = {};
+
+Widget buildInvoiceCard(
+  BuildContext context,
+  Map<String, dynamic> invoice,
+  VoidCallback onUpdate,
+) {
+  final ValueNotifier<bool> isCheckedNotifier = ValueNotifier(
+    selectedInvoiceIds.contains(invoice['id']),
+  );
 
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
@@ -61,63 +73,71 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row with name and more icon
-            Padding(
-              padding: const EdgeInsets.only(bottom: 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      invoice['name'],
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+          
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    invoice['name'],
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.more_horiz, color: Colors.white),
-                    onPressed: () {},
-                    visualDensity: VisualDensity.compact,
-                    splashRadius: 20,
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_horiz, color: Colors.white),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (_) => CustomSortBottomSheet(
+                        selectedIndex: 0,
+                        onSelect: (int index) {
+                          
+                          print("Selected sort index: $index");
+                          Navigator.pop(context);
+                        },
+                      ),
+                    );
+                  },
+                  visualDensity: VisualDensity.compact,
+                  splashRadius: 20,
+                ),
+              ],
             ),
 
             // ID, Date, Status row
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      '${invoice['id']}  ${invoice['date']}',
-                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    '${invoice['id']}  ${invoice['date']}',
+                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6, right: 4),
-                    child: Icon(
-                      invoice['icon'],
-                      color: invoice['color'],
-                      size: 20,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 6, right: 4),
+                  child: Icon(
+                    invoice['icon'],
+                    color: invoice['color'],
+                    size: 20,
                   ),
-                  Text(
-                    invoice['status'],
-                    style: const TextStyle(
-                      color: Color(0xFFA9A9A9),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ),
+                ),
+                Text(
+                  invoice['status'],
+                  style: const TextStyle(
+                    color: Color(0xFFA9A9A9),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
             // Checkbox and Amount row
@@ -133,7 +153,16 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
                           return Checkbox(
                             value: isChecked,
                             onChanged: (bool? newValue) {
-                              isCheckedNotifier.value = newValue ?? false;
+                              final newState = newValue ?? false;
+                              isCheckedNotifier.value = newState;
+
+                              if (newState) {
+                                selectedInvoiceIds.add(invoice['id']);
+                              } else {
+                                selectedInvoiceIds.remove(invoice['id']);
+                              }
+
+                              onUpdate();
                             },
                             visualDensity: VisualDensity.compact,
                             side: const BorderSide(
@@ -145,21 +174,18 @@ Widget buildInvoiceCard(BuildContext context, Map<String, dynamic> invoice) {
                             activeColor: Color(
                               0xFFD67252,
                             ), // Fill color when selected
-                            checkColor: Colors.white, // Check icon color
+                            checkColor: Colors.white,
                           );
                         },
                       ),
                       Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 0),
-                          child: Text(
-                            "Mark as paid by client",
-                            style: const TextStyle(
-                              fontSize: 11.5,
-                              color: Colors.white,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                        child: Text(
+                          "Mark as paid by client",
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            color: Colors.white,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

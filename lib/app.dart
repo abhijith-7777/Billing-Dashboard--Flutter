@@ -7,6 +7,9 @@ import './widget/bottomnav.dart';
 import './widget/floatbutton.dart';
 import './widget/appbar.dart';
 
+
+final ValueNotifier<int> selectedSortIndex = ValueNotifier<int>(0);
+
 class InvoiceApp extends StatelessWidget {
   const InvoiceApp({super.key});
 
@@ -22,15 +25,8 @@ class InvoiceApp extends StatelessWidget {
   }
 }
 
-class InvoiceDashboard extends StatefulWidget {
+class InvoiceDashboard extends StatelessWidget {
   const InvoiceDashboard({super.key});
-
-  @override
-  State<InvoiceDashboard> createState() => _InvoiceDashboardState();
-}
-
-class _InvoiceDashboardState extends State<InvoiceDashboard> {
-  int selectedSortIndex = 0;
 
   List<Map<String, dynamic>> getFilteredInvoices(
     List<Map<String, dynamic>> invoices,
@@ -43,6 +39,10 @@ class _InvoiceDashboardState extends State<InvoiceDashboard> {
         return invoices.where((i) => i['status'] == 'UNPAID').toList();
       case 3:
         return invoices.where((i) => i['status'] == 'DRAFT').toList();
+      case 4:
+        return invoices
+            .where((i) => selectedInvoiceIds.contains(i['id']))
+            .toList();
       default:
         return invoices;
     }
@@ -88,72 +88,79 @@ class _InvoiceDashboardState extends State<InvoiceDashboard> {
     final allInvoices = invoices;
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Builder(
         builder: (context) {
           final controller = DefaultTabController.of(context);
-          final currentIndex = controller.index;
 
-          final filtered = getFilteredInvoices(allInvoices, currentIndex);
-          final sorted = sortInvoices(filtered, selectedSortIndex);
+          return ValueListenableBuilder<int>(
+            valueListenable: selectedSortIndex,
+            builder: (context, sortIndex, _) {
+              final currentIndex = controller.index;
+              final filtered = getFilteredInvoices(allInvoices, currentIndex);
+              final sorted = sortInvoices(filtered, sortIndex);
 
-          controller.addListener(() {
-            setState(() {});
-          });
+              controller.addListener(() {
+                (context as Element).markNeedsBuild();
+              });
 
-          return Scaffold(
-            appBar: CustomAppBar(
-              onSortSelected: (index) {
-                setState(() {
-                  selectedSortIndex = index;
-                });
-              },
-              selectedSortIndex: selectedSortIndex,
-            ),
-            body: Column(
-              children: [
-                Bar(controller: controller),
-                if (currentIndex == 0) const CustomGauge(),
-                Invoice(currentIndex: currentIndex, count: filtered.length),
-                Container(
-                  width: double.infinity,
-                  height: 0.5,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0x80767174),
-                        Color(0x80DCD2D8),
-                        Color(0x80767174),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [0.0, 0.5, 1.0],
-                    ),
-                  ),
+              return Scaffold(
+                appBar: CustomAppBar(
+                  onSortSelected: (index) {
+                    selectedSortIndex.value = index;
+                  },
+                  selectedSortIndex: sortIndex,
                 ),
-                const Padding(padding: EdgeInsets.all(15)),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: ListView.builder(
-                      itemCount: sorted.length,
-                      itemBuilder: (context, index) =>
-                          buildInvoiceCard(context, sorted[index]),
+                body: Column(
+                  children: [
+                    Bar(controller: controller),
+                    if (currentIndex == 0) CustomGauge(invoices: sorted),
+                    Invoice(currentIndex: currentIndex, count: filtered.length),
+                    Container(
+                      width: double.infinity,
+                      height: 0.5,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0x80767174),
+                            Color(0x80DCD2D8),
+                            Color(0x80767174),
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [0.0, 0.5, 1.0],
+                        ),
+                      ),
                     ),
-                  ),
+                    const Padding(padding: EdgeInsets.all(15)),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0),
+                        child: ListView.builder(
+                          itemCount: sorted.length,
+                          itemBuilder: (context, index) => buildInvoiceCard(
+                            context,
+                            sorted[index],
+                            () => selectedSortIndex.notifyListeners(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            floatingActionButton: const Padding(
-              padding: EdgeInsets.only(bottom: 16),
-              child: CustomFloatingActionButton(),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            bottomNavigationBar: const CustomBottomNavigationBar(),
+                floatingActionButton: const Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: CustomFloatingActionButton(),
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                bottomNavigationBar: const CustomBottomNavigationBar(),
+              );
+            },
           );
         },
       ),
     );
   }
 }
+

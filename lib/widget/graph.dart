@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class CustomGauge extends StatelessWidget {
-  const CustomGauge({super.key});
+  final List<Map<String, dynamic>> invoices;
+
+  const CustomGauge({super.key, required this.invoices});
 
   Widget _buildStatusLegend(
     Color color,
@@ -32,6 +34,16 @@ class CustomGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final draftCount = invoices.where((i) => i['status'] == 'DRAFT').length;
+    final paidCount = invoices.where((i) => i['status'] == 'PAID').length;
+    final unpaidCount = invoices.where((i) => i['status'] == 'UNPAID').length;
+
+    final total = draftCount + paidCount + unpaidCount;
+
+    final draftRatio = total == 0 ? 0.0 : draftCount / total;
+    final paidRatio = total == 0 ? 0.0 : paidCount / total;
+    final unpaidRatio = total == 0 ? 0.0 : unpaidCount / total;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Column(
@@ -45,21 +57,25 @@ class CustomGauge extends StatelessWidget {
                 children: [
                   CustomPaint(
                     size: const Size(300, 100),
-                    painter: GaugePainter(),
+                    painter: GaugePainter(
+                      draftRatio: draftRatio,
+                      paidRatio: paidRatio,
+                      unpaidRatio: unpaidRatio,
+                    ),
                   ),
                   Positioned(
                     top: 35,
                     child: Column(
-                      children: const [
+                      children: [
                         Text(
-                          "50%",
-                          style: TextStyle(
+                          "${(paidRatio * 100).toStringAsFixed(0)}%",
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 19,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Text(
+                        const Text(
                           "Paid",
                           style: TextStyle(color: Colors.white70, fontSize: 10),
                         ),
@@ -70,15 +86,22 @@ class CustomGauge extends StatelessWidget {
               ),
             ),
           ),
-
           const Padding(padding: EdgeInsets.only(top: 50)),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildStatusLegend(Color(0XFFC27605), "Drafts (01)"),
-              _buildStatusLegend(Color(0xFF4B7C47), "Paid (02)"),
-              _buildStatusLegend(Color(0XFFFF373B), "Unpaid (01)"),
+              _buildStatusLegend(
+                const Color(0xFFC27605),
+                "Drafts (${draftCount.toString().padLeft(2, '0')})",
+              ),
+              _buildStatusLegend(
+                const Color(0xFF4B7C47),
+                "Paid (${paidCount.toString().padLeft(2, '0')})",
+              ),
+              _buildStatusLegend(
+                const Color(0xFFFF373B),
+                "Unpaid (${unpaidCount.toString().padLeft(2, '0')})",
+              ),
             ],
           ),
         ],
@@ -88,6 +111,16 @@ class CustomGauge extends StatelessWidget {
 }
 
 class GaugePainter extends CustomPainter {
+  final double draftRatio;
+  final double paidRatio;
+  final double unpaidRatio;
+
+  GaugePainter({
+    required this.draftRatio,
+    required this.paidRatio,
+    required this.unpaidRatio,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final strokeWidth = 16.0;
@@ -106,15 +139,19 @@ class GaugePainter extends CustomPainter {
     final gapAngle = 0.2;
     final segmentCount = 3;
     final totalGapAngle = gapAngle * (segmentCount - 1);
-
     final availableAngle = totalAngle - totalGapAngle;
+
     final sweepAngles = [
-      availableAngle * 0.2, // 20%
-      availableAngle * 0.5, // 50%
-      availableAngle * 0.3, // 30%
+      availableAngle * draftRatio,
+      availableAngle * paidRatio,
+      availableAngle * unpaidRatio,
     ];
 
-    final colors = [Color(0xFFC27605), Color(0xFF4B7C47), Color(0xFFFF373B)];
+    final colors = [
+      const Color(0xFFC27605), // Draft
+      const Color(0xFF4B7C47), // Paid
+      const Color(0xFFFF373B), // Unpaid
+    ];
 
     double currentAngle = startAngle;
 
@@ -140,5 +177,5 @@ class GaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

@@ -70,6 +70,10 @@ flutter:
     - assets/image/sort.png
     - assets/image/AtoZ.png
     - assets/image/ZtoA.png
+    - assets/image/Download1.png
+    - assets/image/reminder.png
+    - assets/image/share.png
+    - assets/image/remove.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
