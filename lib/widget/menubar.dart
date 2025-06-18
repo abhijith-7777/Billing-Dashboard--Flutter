@@ -16,7 +16,7 @@ class Bar extends StatelessWidget {
           buildTab('Paid', isSelected: controller.index == 1),
           buildTab('Unpaid', isSelected: controller.index == 2),
           buildTab('Drafts', isSelected: controller.index == 3),
-          buildIconTab('Filered', isSelected: controller.index == 4),
+          buildIconTab('Filtered', isSelected: controller.index == 4),
         ],
       ),
     );
@@ -56,7 +56,7 @@ class Bar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       child: OutlinedButton(
-          style: OutlinedButton.styleFrom(
+        style: OutlinedButton.styleFrom(
           backgroundColor: isSelected
               ? const Color(0xFF6E5773)
               : Colors.transparent,
@@ -70,7 +70,12 @@ class Bar extends StatelessWidget {
         onPressed: () {
           controller.animateTo(4);
         },
-        child: Image.asset('assets/image/Group.png', height: 18, width: 18, color: isSelected ? Colors.white : null,),
+        child: Image.asset(
+          'assets/image/Group.png',
+          height: 18,
+          width: 18,
+          color: isSelected ? Colors.white : null,
+        ),
       ),
     );
   }

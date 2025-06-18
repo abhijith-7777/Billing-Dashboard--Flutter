@@ -74,6 +74,7 @@ flutter:
     - assets/image/reminder.png
     - assets/image/share.png
     - assets/image/remove.png
+    - assets/image/addinvoice.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

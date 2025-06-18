@@ -7,7 +7,6 @@ import './widget/bottomnav.dart';
 import './widget/floatbutton.dart';
 import './widget/appbar.dart';
 
-
 final ValueNotifier<int> selectedSortIndex = ValueNotifier<int>(0);
 
 class InvoiceApp extends StatelessWidget {
@@ -27,61 +26,6 @@ class InvoiceApp extends StatelessWidget {
 
 class InvoiceDashboard extends StatelessWidget {
   const InvoiceDashboard({super.key});
-
-  List<Map<String, dynamic>> getFilteredInvoices(
-    List<Map<String, dynamic>> invoices,
-    int index,
-  ) {
-    switch (index) {
-      case 1:
-        return invoices.where((i) => i['status'] == 'PAID').toList();
-      case 2:
-        return invoices.where((i) => i['status'] == 'UNPAID').toList();
-      case 3:
-        return invoices.where((i) => i['status'] == 'DRAFT').toList();
-      case 4:
-        return invoices
-            .where((i) => selectedInvoiceIds.contains(i['id']))
-            .toList();
-      default:
-        return invoices;
-    }
-  }
-
-  List<Map<String, dynamic>> sortInvoices(
-    List<Map<String, dynamic>> data,
-    int sortIndex,
-  ) {
-    List<Map<String, dynamic>> sorted = [...data];
-    DateTime parseDate(String dateStr) {
-      final parts = dateStr.split('/');
-      return DateTime(
-        int.parse(parts[2]),
-        int.parse(parts[1]),
-        int.parse(parts[0]),
-      );
-    }
-
-    switch (sortIndex) {
-      case 0:
-        sorted.sort(
-          (a, b) => parseDate(b['date']).compareTo(parseDate(a['date'])),
-        );
-        break;
-      case 1:
-        sorted.sort(
-          (a, b) => parseDate(a['date']).compareTo(parseDate(b['date'])),
-        );
-        break;
-      case 2:
-        sorted.sort((a, b) => a['name'].compareTo(b['name']));
-        break;
-      case 3:
-        sorted.sort((a, b) => b['name'].compareTo(a['name']));
-        break;
-    }
-    return sorted;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +58,14 @@ class InvoiceDashboard extends StatelessWidget {
                 body: Column(
                   children: [
                     Bar(controller: controller),
-                    if (currentIndex == 0) CustomGauge(invoices: sorted),
-                    Invoice(currentIndex: currentIndex, count: filtered.length),
+                    if (currentIndex == 0 && sorted.isNotEmpty)
+                      CustomGauge(invoices: sorted),
+                    Invoice(
+                      currentIndex: currentIndex,
+                      count: filtered.length,
+                      showButton: sorted.isNotEmpty,
+                    ),
+
                     Container(
                       width: double.infinity,
                       height: 0.5,
@@ -134,26 +84,62 @@ class InvoiceDashboard extends StatelessWidget {
                     ),
                     const Padding(padding: EdgeInsets.all(15)),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0),
-                        child: ListView.builder(
-                          itemCount: sorted.length,
-                          itemBuilder: (context, index) => buildInvoiceCard(
-                            context,
-                            sorted[index],
-                            () => selectedSortIndex.notifyListeners(),
-                          ),
-                        ),
-                      ),
+                      child: sorted.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: sorted.length,
+                              itemBuilder: (context, index) => buildInvoiceCard(
+                                context,
+                                sorted[index],
+                                () => selectedSortIndex.notifyListeners(),
+                              ),
+                            )
+                          : Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/image/addinvoice.png',
+                                      width: 45,
+                                      height: 50,
+                                      color: Colors.white,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 12),
+                                      child: Text(
+                                        "Add a new invoice to keep your billing organized",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 24),
+                                      child: CustomFloatingActionButton(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                     ),
                   ],
                 ),
-                floatingActionButton: const Padding(
-                  padding: EdgeInsets.only(bottom: 16),
-                  child: CustomFloatingActionButton(),
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: sorted.isNotEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.only(bottom: 16),
+                        child: CustomFloatingActionButton(),
+                      )
+                    : null,
+                floatingActionButtonLocation: sorted.isNotEmpty
+                    ? FloatingActionButtonLocation.centerFloat
+                    : null,
                 bottomNavigationBar: const CustomBottomNavigationBar(),
               );
             },
@@ -163,4 +149,3 @@ class InvoiceDashboard extends StatelessWidget {
     );
   }
 }
-

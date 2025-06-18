@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './bottomchoosesheet.dart';
 
-// Global invoice list
+
 final List<Map<String, dynamic>> invoices = [
   {
     'name': 'Rahul V Nair',
@@ -41,7 +41,60 @@ final List<Map<String, dynamic>> invoices = [
   },
 ];
 
-// Track selected invoices
+List<Map<String, dynamic>> getFilteredInvoices(
+  List<Map<String, dynamic>> invoices,
+  int index,
+) {
+  switch (index) {
+    case 1:
+      return invoices.where((i) => i['status'] == 'PAID').toList();
+    case 2:
+      return invoices.where((i) => i['status'] == 'UNPAID').toList();
+    case 3:
+      return invoices.where((i) => i['status'] == 'DRAFT').toList();
+    case 4:
+      return invoices.where((i) => selectedInvoiceIds.contains(i['id'])).toList();
+    default:
+      return invoices;
+  }
+}
+
+  List<Map<String, dynamic>> sortInvoices(
+    List<Map<String, dynamic>> data,
+    int sortIndex,
+  ) {
+    List<Map<String, dynamic>> sorted = [...data];
+    DateTime parseDate(String dateStr) {
+      final parts = dateStr.split('/');
+      return DateTime(
+        int.parse(parts[2]),
+        int.parse(parts[1]),
+        int.parse(parts[0]),
+      );
+    }
+
+    switch (sortIndex) {
+      case 0:
+        sorted.sort(
+          (a, b) => parseDate(b['date']).compareTo(parseDate(a['date'])),
+        );
+        break;
+      case 1:
+        sorted.sort(
+          (a, b) => parseDate(a['date']).compareTo(parseDate(b['date'])),
+        );
+        break;
+      case 2:
+        sorted.sort((a, b) => a['name'].compareTo(b['name']));
+        break;
+      case 3:
+        sorted.sort((a, b) => b['name'].compareTo(a['name']));
+        break;
+    }
+    return sorted;
+  }
+
+
 final Set<String> selectedInvoiceIds = {};
 
 Widget buildInvoiceCard(

@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 class Invoice extends StatelessWidget {
   final int currentIndex;
   final int count;
+  final bool showButton;
 
-  const Invoice({super.key, required this.currentIndex, required this.count});
+  const Invoice({
+    super.key,
+    required this.currentIndex,
+    required this.count,
+    this.showButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     String title = "Total Invoices: ";
     if (currentIndex == 1) {
       title = "Total Paid Invoices: ";
-    }
-    else  if (currentIndex == 2) {
+    } else if (currentIndex == 2) {
       title = "Total Unpaid Invoices: ";
-    }
-    else  if (currentIndex == 3) {
+    } else if (currentIndex == 3) {
       title = "Total Drafts Invoices: ";
-    }
-     else  if (currentIndex == 4) {
+    } else if (currentIndex == 4) {
       title = "Total Filtered Invoices: ";
     }
 
@@ -55,42 +58,45 @@ class Invoice extends StatelessWidget {
               ),
             ),
           ),
-          OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(1, 20),
-              side: const BorderSide(color: Color(0xFFA9A9A9)),
-              shape: const StadiumBorder(),
-              backgroundColor: const Color(0xFFA9A9A9).withOpacity(0.15),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: 6),
-                  child: Text(
-                    "Payment History",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+          if (showButton)
+            OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(1, 20),
+                side: const BorderSide(color: Color(0xFFA9A9A9)),
+                shape: const StadiumBorder(),
+                backgroundColor: const Color(0xFFA9A9A9).withOpacity(0.15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Text(
+                      "Payment History",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                ),
-                Image.asset(
-                  'assets/image/download.png',
-                  width: 16,
-                  height: 16,
-                  color: Colors.white,
-                ),
-              ],
+                  Image.asset(
+                    'assets/image/download.png',
+                    width: 16,
+                    height: 16,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 }
+
 
 
